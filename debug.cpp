@@ -41,7 +41,7 @@ ostream& operator<<(ostream& os, const vector<vector<T>>& v) {
     int width = 0;
     for (unsigned int i = 0; i < v.size(); ++i) {
         for (unsigned int j = 0; j < v[i].size(); ++j) {
-            width = max(width, int(ceil(log10(v[i][j]))));
+            width = max(width, to_string(v[i][j].size()));
         }
     }
     Debug::set_MAX_WIDTH(width);
@@ -143,5 +143,5 @@ void INTERNAL_DUMP(string name, Head&& head, Tail&&... tail) {
 //------------------------------------------------------------------------------
 
 int main() {
-    
+
 }
