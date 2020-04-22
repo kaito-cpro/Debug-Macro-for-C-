@@ -41,7 +41,7 @@ ostream& operator<<(ostream& os, const vector<vector<T>>& v) {
     int width = 0;
     for (unsigned int i = 0; i < v.size(); ++i) {
         for (unsigned int j = 0; j < v[i].size(); ++j) {
-            width = max(width, to_string(v[i][j].size()));
+            width = max(width, (int)to_string(v[i][j]).size());
         }
     }
     Debug::set_MAX_WIDTH(width);
@@ -142,6 +142,24 @@ void INTERNAL_DUMP(string name, Head&& head, Tail&&... tail) {
 // End of Debug parts
 //------------------------------------------------------------------------------
 
-int main() {
 
+int main() {
+    // サンプル
+    int x = 114, y = -514;
+    string s = "RAS";
+    DUMP(x, y, s);
+    vector<long long> v{1, 2, 3};
+    DUMP(v);
+    vector<vector<int>> dp(3, vector<int>(3));
+    for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) dp[i][j] = 10 * i + j;
+    DUMP(dp);
+
+    // 出力画面
+    // >> x = 114
+    // >> y = -514
+    // >> s = RAS
+    // >> v = [1, 2, 3]
+    // >> dp = [[ 0,  1,  2]
+    //          [10, 11, 12]
+    //          [20, 21, 22]]
 }
