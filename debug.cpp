@@ -147,7 +147,7 @@ int main() {
     // サンプル
     int x = 114, y = -514;
     string s = "RAS";
-    DUMP(x, y, s);
+    DUMP(x, y, max(x, y), s);
     vector<long long> v{1, 2, 3};
     DUMP(v);
     vector<vector<int>> dp(3, vector<int>(3));
@@ -157,6 +157,7 @@ int main() {
     // 出力画面
     // >> x = 114
     // >> y = -514
+    // >> max(x, y) = 114
     // >> s = RAS
     // >> v = [1, 2, 3]
     // >> dp = [[ 0,  1,  2]
