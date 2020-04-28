@@ -5,6 +5,7 @@ class Debug {
 private:
     static int NAME_LENGTH, MAX_WIDTH;
     static bool IS_MATRIX;
+    static long long INF;
 public:
     static void set_NAME_LENGTH(int l) { NAME_LENGTH = l; }
     static int get_NAME_LENGTH() { return NAME_LENGTH; }
@@ -12,11 +13,14 @@ public:
     static int get_MAX_WIDTH() { return MAX_WIDTH; }
     static void set_IS_MATRIX(bool f) { IS_MATRIX = f; }
     static bool get_IS_MATRIX() { return IS_MATRIX; }
+    static void set_INF(long long i) { INF = i; }
+    static long long get_INF() { return INF; }
 };
 
 int Debug::NAME_LENGTH = 0;
 int Debug::MAX_WIDTH = 0;
 bool Debug::IS_MATRIX = false;
+long long Debug::INF = LLONG_MAX;
 
 // Debug for vector
 template <typename T>
@@ -28,7 +32,8 @@ ostream& operator<<(ostream& os, const vector<T>& v) {
         if (Debug::get_IS_MATRIX()) {
             os << right << setw(Debug::get_MAX_WIDTH());
         }
-        os << e;
+        if (e == Debug::get_INF()) os << "INF";
+        else os << e;
         flg = false;
     }
     os << "]";
@@ -41,7 +46,8 @@ ostream& operator<<(ostream& os, const vector<vector<T>>& v) {
     int width = 0;
     for (unsigned int i = 0; i < v.size(); ++i) {
         for (unsigned int j = 0; j < v[i].size(); ++j) {
-            width = max(width, (int)to_string(v[i][j]).size());
+            if (v[i][j] == Debug::get_INF()) width = max(width, (int)("INF"s.size()));
+            else width = max(width, (int)to_string(v[i][j]).size());
         }
     }
     Debug::set_MAX_WIDTH(width);
@@ -152,6 +158,9 @@ int main() {
     DUMP(v);
     vector<vector<int>> dp(3, vector<int>(3));
     for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) dp[i][j] = 10 * i + j;
+    const int INF = 1 << 30;
+    Debug::set_INF(INF);  // INF は桁が大きくて見にくいので "INF" と表示させたいとき
+    dp[1][1] = INF;
     DUMP(dp);
 
     // 出力画面
@@ -160,7 +169,7 @@ int main() {
     // >> max(x, y) = 114
     // >> s = RAS
     // >> v = [1, 2, 3]
-    // >> dp = [[ 0,  1,  2]
-    //          [10, 11, 12]
-    //          [20, 21, 22]]
+    // >> dp = [[  0,   1,   2]
+    //          [ 10, INF,  12]
+    //          [ 20,  21,  22]]
 }
