@@ -100,6 +100,36 @@ ostream& operator<<(ostream& os, const map<T, U>& mp) {
     return os;
 }
 
+// Debug for queue
+template <typename T>
+ostream& operator<<(ostream& os, const queue<T>& que) {
+    queue<T> que_cp = que;
+    os << "[";
+    bool flg = true;
+    while (!que_cp.empty()) {
+        os << (flg ? "" : ", ");
+        os << que_cp.front();
+        que_cp.pop();
+        flg = false;
+    }
+    os << "]";
+    return os;
+}
+
+// Debug for deque
+template <typename T>
+ostream& operator<<(ostream& os, const deque<T>& que) {
+    os << "[";
+    bool flg = true;
+    for (auto e : que) {
+        os << (flg ? "" : ", ");
+        os << e;
+        flg = false;
+    }
+    os << "]";
+    return os;
+}
+
 // Debug assistant
 #define DUMP(...) INTERNAL_DUMP(#__VA_ARGS__, __VA_ARGS__)
 
