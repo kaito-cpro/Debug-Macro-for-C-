@@ -86,6 +86,20 @@ ostream& operator<<(ostream& os, const set<T>& s) {
     return os;
 }
 
+// Debug for multiset
+template <typename T>
+ostream& operator<<(ostream& os, const multiset<T>& s) {
+    os << "{";
+    bool flg = true;
+    for (auto e : s) {
+        os << (flg ? "" : ", ");
+        os << e;
+        flg = false;
+    }
+    os << "}";
+    return os;
+}
+
 // Debug for map
 template <typename T, typename U>
 ostream& operator<<(ostream& os, const map<T, U>& mp) {
