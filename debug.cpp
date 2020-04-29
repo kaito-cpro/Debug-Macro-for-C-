@@ -22,9 +22,25 @@ int Debug::MAX_WIDTH = 0;
 bool Debug::IS_MATRIX = false;
 long long Debug::INF = LLONG_MAX;
 
-// Debug for vector
+// Debug for vector (1-dimensional template)
 template <typename T>
 ostream& operator<<(ostream& os, const vector<T>& v) {
+    os << "[";
+    bool flg = true;
+    for (auto e : v) {
+        os << (flg ? "" : ", ");
+        if (Debug::get_IS_MATRIX()) {
+            os << right << setw(Debug::get_MAX_WIDTH());
+        }
+        os << e;
+        flg = false;
+    }
+    os << "]";
+    return os;
+}
+
+// Debug for vector (1-dimensional int ovreload)
+ostream& operator<<(ostream& os, const vector<int>& v) {
     os << "[";
     bool flg = true;
     for (auto e : v) {
@@ -40,6 +56,57 @@ ostream& operator<<(ostream& os, const vector<T>& v) {
     return os;
 }
 
+// Debug for vector (1-dimensional long long ovreload)
+ostream& operator<<(ostream& os, const vector<long long>& v) {
+    os << "[";
+    bool flg = true;
+    for (auto e : v) {
+        os << (flg ? "" : ", ");
+        if (Debug::get_IS_MATRIX()) {
+            os << right << setw(Debug::get_MAX_WIDTH());
+        }
+        if (e == Debug::get_INF()) os << "INF";
+        else os << e;
+        flg = false;
+    }
+    os << "]";
+    return os;
+}
+
+// Debug for vector (1-dimensional pair ovreload)
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const vector<pair<T, U>>& v) {
+    os << "[";
+    bool flg = true;
+    for (auto e : v) {
+        os << (flg ? "" : ", ");
+        if (Debug::get_IS_MATRIX()) {
+            int width = (int)("(, )"s.size());
+            if (e.first == Debug::get_INF()) width += (int)("INF"s.size());
+            else width += (int)to_string(e.first).size();
+            if (e.second == Debug::get_INF()) width += (int)("INF"s.size());
+            else width += (int)to_string(e.second).size();
+            string space = "";
+            for (int i = 0; i < Debug::get_MAX_WIDTH() - width; ++i) space += " ";
+            os << space;
+            if (e.first == Debug::get_INF()) os << "(" << "INF" << ", ";
+            else os << "(" << e.first << ", ";
+            if (e.second == Debug::get_INF()) os << "INF" << ")";
+            else os << e.second << ")";
+        }
+        else {
+            if (e.first == Debug::get_INF()) os << "(" << "INF" << ", ";
+            else os << "(" << e.first << ", ";
+            if (e.second == Debug::get_INF()) os << "INF" << ")";
+            else os << e.second << ")";
+        }
+        flg = false;
+    }
+    os << "]";
+    return os;
+}
+
+// Debug for vector (2-dimensional template)
 template <typename T>
 ostream& operator<<(ostream& os, const vector<vector<T>>& v) {
     Debug::set_IS_MATRIX(true);
@@ -48,6 +115,36 @@ ostream& operator<<(ostream& os, const vector<vector<T>>& v) {
         for (unsigned int j = 0; j < v[i].size(); ++j) {
             if (v[i][j] == Debug::get_INF()) width = max(width, (int)("INF"s.size()));
             else width = max(width, (int)to_string(v[i][j]).size());
+        }
+    }
+    Debug::set_MAX_WIDTH(width);
+    string space = "";
+    for (int i = 0; i < Debug::get_NAME_LENGTH() + 7; ++i) space += " ";
+    os << "[";
+    bool flg = true;
+    for (auto e : v) {
+        os << (flg ? "" : "\n" + space);
+        os << e;
+        flg = false;
+    }
+    os << "]";
+    Debug::set_IS_MATRIX(false);
+    return os;
+}
+
+// Debug for vector (2-dimensional pair overload)
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const vector<vector<pair<T, U>>>& v) {
+    Debug::set_IS_MATRIX(true);
+    int width = 0;
+    for (unsigned int i = 0; i < v.size(); ++i) {
+        for (unsigned int j = 0; j < v[i].size(); ++j) {
+            int w = (int)("(, )"s.size());
+            if (v[i][j].first == Debug::get_INF()) w += (int)("INF"s.size());
+            else w += (int)to_string(v[i][j].first).size();
+            if (v[i][j].second == Debug::get_INF()) w += (int)("INF"s.size());
+            else w += (int)to_string(v[i][j].second).size();
+            width = max(width, w);
         }
     }
     Debug::set_MAX_WIDTH(width);
