@@ -24,7 +24,7 @@ long long Debug::INF = LLONG_MAX;
 
 // Debug for basic type element
 template <typename T>
-int ELEMENT_WIDTH(const T& e) {
+int ELEMENT_WIDTH(T& e) {
     int width;
     stringstream ss;
     ss << e;
@@ -35,7 +35,7 @@ int ELEMENT_WIDTH(const T& e) {
 }
 
 template <typename T>
-ostream& operator<<(ostream& os, const T* e) {
+ostream& operator<<(ostream& os, T* e) {
     stringstream ss;
     ss << *e;
     if (ss.str() == to_string(Debug::get_INF())) os << "INF"s;
@@ -43,7 +43,10 @@ ostream& operator<<(ostream& os, const T* e) {
     else os << ss.str();
     return os;
 }
-
+ostream& operator<<(ostream& os, char* e) {
+    os << *e;
+    return os;
+}
 ostream& operator<<(ostream& os, const char* e) {
     string s = e;
     os << s;
@@ -52,43 +55,43 @@ ostream& operator<<(ostream& os, const char* e) {
 
 // Debug for pair
 template <typename T, typename U>
-int ELEMENT_WIDTH(const pair<T, U>& p) {
+int ELEMENT_WIDTH(pair<T, U>& p) {
     return ELEMENT_WIDTH(p.first) + ELEMENT_WIDTH(p.second) + "(, )"s.size();
 }
 
 template <typename T, typename U>
-ostream& operator<<(ostream& os, const pair<T, U>* p) {
+ostream& operator<<(ostream& os, pair<T, U>* p) {
     os << "("s << &((*p).first) << ", "s << &((*p).second) << ")"s;
     return os;
 }
 
 // Debug for tuple
 template<int N, class Tuple>
-int WIDTH_TUPLE(const Tuple& t){
+int WIDTH_TUPLE(Tuple& t){
     return 0;
 }
 template<int N, class Tuple, class Head, class... Tail>
-int WIDTH_TUPLE(const Tuple& t) {
+int WIDTH_TUPLE(Tuple& t) {
     int width = 0;
     if (N) width += ", "s.size();
     width += ELEMENT_WIDTH(get<N>(t)) + WIDTH_TUPLE<N + 1, Tuple, Tail...>(t);
     return width;
 }
 template<class... Ts>
-int ELEMENT_WIDTH(const tuple<Ts...>& t) {
+int ELEMENT_WIDTH(tuple<Ts...>& t) {
     return WIDTH_TUPLE<0, tuple<Ts...>, Ts...>(t) + "()"s.size();
 }
 
 template<int N, class Tuple>
-void OUT_TUPLE(ostream& os, const Tuple* t){}
+void OUT_TUPLE(ostream& os, Tuple* t){}
 template<int N, class Tuple, class Head, class... Tail>
-void OUT_TUPLE(ostream& os, const Tuple* t) {
+void OUT_TUPLE(ostream& os, Tuple* t) {
     if (N) os << ", "s;
     os << &get<N>(*t);
     OUT_TUPLE<N + 1, Tuple, Tail...>(os, &(*t));
 }
 template<class... Ts>
-ostream& operator<<(ostream& os, const tuple<Ts...>* t) {
+ostream& operator<<(ostream& os, tuple<Ts...>* t) {
     os << "("s;
     OUT_TUPLE<0, tuple<Ts...>, Ts...>(os, &(*t));
     os << ")"s;
@@ -97,7 +100,7 @@ ostream& operator<<(ostream& os, const tuple<Ts...>* t) {
 
 // Debug for vector (1-dimensional)
 template <typename T>
-ostream& operator<<(ostream& os, const vector<T>* v) {
+ostream& operator<<(ostream& os, vector<T>* v) {
     os << "["s;
     bool flg = true;
     for (auto e : *v) {
@@ -116,7 +119,7 @@ ostream& operator<<(ostream& os, const vector<T>* v) {
 
 // Debug for vector (2-dimensional)
 template <typename T>
-ostream& operator<<(ostream& os, const vector<vector<T>>* v) {
+ostream& operator<<(ostream& os, vector<vector<T>>* v) {
     Debug::set_IS_MATRIX(true);
     int width = 0;
     for (unsigned int i = 0; i < (*v).size(); ++i) {
@@ -141,7 +144,7 @@ ostream& operator<<(ostream& os, const vector<vector<T>>* v) {
 
 // Debug for set
 template <typename T>
-ostream& operator<<(ostream& os, const set<T>* s) {
+ostream& operator<<(ostream& os, set<T>* s) {
     os << "{"s;
     bool flg = true;
     for (auto e : *s) {
@@ -155,7 +158,7 @@ ostream& operator<<(ostream& os, const set<T>* s) {
 
 // Debug for multiset
 template <typename T>
-ostream& operator<<(ostream& os, const multiset<T>* s) {
+ostream& operator<<(ostream& os, multiset<T>* s) {
     os << "{"s;
     bool flg = true;
     for (auto e : *s) {
@@ -169,7 +172,7 @@ ostream& operator<<(ostream& os, const multiset<T>* s) {
 
 // Debug for map
 template <typename T, typename U>
-ostream& operator<<(ostream& os, const map<T, U>* mp) {
+ostream& operator<<(ostream& os, map<T, U>* mp) {
     os << "{"s;
     bool flg = true;
     for (auto e : *mp) {
@@ -183,7 +186,7 @@ ostream& operator<<(ostream& os, const map<T, U>* mp) {
 
 // Debug for queue
 template <typename T>
-ostream& operator<<(ostream& os, const queue<T>* que) {
+ostream& operator<<(ostream& os, queue<T>* que) {
     queue<T> que_cp = *que;
     os << "["s;
     bool flg = true;
@@ -199,7 +202,7 @@ ostream& operator<<(ostream& os, const queue<T>* que) {
 
 // Debug for deque
 template <typename T>
-ostream& operator<<(ostream& os, const deque<T>* que) {
+ostream& operator<<(ostream& os, deque<T>* que) {
     os << "["s;
     bool flg = true;
     for (auto e : *que) {
