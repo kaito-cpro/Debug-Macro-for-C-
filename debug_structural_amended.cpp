@@ -64,6 +64,12 @@ ostream& operator<<(ostream& os, pair<T, U>* p) {
     os << "("s << &((*p).first) << ", "s << &((*p).second) << ")"s;
     return os;
 }
+template <typename T, typename U>
+ostream& operator<<(ostream& os, const pair<T, U>* p) {
+    pair<T, U> p_not_const = *p;
+    os << &p_not_const;
+    return os;
+}
 
 // Debug for tuple
 template<int N, class Tuple>
@@ -95,6 +101,12 @@ ostream& operator<<(ostream& os, tuple<Ts...>* t) {
     os << "("s;
     OUT_TUPLE<0, tuple<Ts...>, Ts...>(os, &(*t));
     os << ")"s;
+    return os;
+}
+template<class... Ts>
+ostream& operator<<(ostream& os, const tuple<Ts...>* t) {
+    tuple<Ts...> t_not_const = *t;
+    os << &t_not_const;
     return os;
 }
 
