@@ -212,6 +212,37 @@ ostream& operator<<(ostream& os, queue<T>* que) {
     return os;
 }
 
+// Debug for priority-queue
+template <typename T>
+ostream& operator<<(ostream& os, priority_queue<T>* que) {
+    priority_queue<T> que_cp = *que;
+    os << "["s;
+    bool flg = true;
+    while (!que_cp.empty()) {
+        os << (flg ? ""s : ", "s);
+        os << &(que_cp.top());
+        que_cp.pop();
+        flg = false;
+    }
+    os << "]"s;
+    return os;
+}
+
+template <typename T>
+ostream& operator<<(ostream& os, priority_queue<T, vector<T>, greater<T>>* que) {
+    priority_queue<T, vector<T>, greater<T>> que_cp = *que;
+    os << "["s;
+    bool flg = true;
+    while (!que_cp.empty()) {
+        os << (flg ? ""s : ", "s);
+        os << &(que_cp.top());
+        que_cp.pop();
+        flg = false;
+    }
+    os << "]"s;
+    return os;
+}
+
 // Debug for deque
 template <typename T>
 ostream& operator<<(ostream& os, deque<T>* que) {
