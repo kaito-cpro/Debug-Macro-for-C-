@@ -374,8 +374,30 @@ int main() {
     DUMP(dp);
 
     // DUMPS() サンプル
+    // DUMP(x, y) でも x と y を表示できるが複数行にまたがるので, 組 (x, y) として 1 行に表示できるようにしたのが DUMPS()
+    // つまり, DUMP(make_tuple(x, y)) のような表示形態となる
+    // また, 2 次元 vector の場合は見やすくインデントされる仕様になっている
     cout << "---DUMPS---" << endl;
     DUMPS(x, v);
     DUMPS(dp, s);
     DUMPS(s, dp);
+
+    // 出力画面
+    // ---DUMP---
+    // >> x = 114
+    // >> y = -514
+    // >> max(x, y) = 114
+    // >> s = RAISE A SUILEN
+    // >> v = [(Rinko, 1017, 1), (Moka, 93, 0)]
+    // >> dp = [[   0,    1,    2]
+    //          [  10, -INF,   12]
+    //          [  20,   21,   22]]
+    // ---DUMPS---
+    // >> (x, v) = (114, [(Rinko, 1017, 1), (Moka, 93, 0)])
+    // >> (dp, s) = ([[   0,    1,    2]
+    //                [  10, -INF,   12]
+    //                [  20,   21,   22]], RAISE A SUILEN)
+    // >> (s, dp) = (RAISE A SUILEN, [[   0,    1,    2]
+    //                                [  10, -INF,   12]
+    //                                [  20,   21,   22]])}
 }
