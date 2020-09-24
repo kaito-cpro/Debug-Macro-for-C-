@@ -3,12 +3,12 @@ using namespace std;
 
 class Debug {
 private:
-    static int NAME_LENGTH, MAX_WIDTH;
+    static int DISPLAYED_LENGTH, MAX_WIDTH;
     static bool IS_MATRIX;
     static long long INF;
 public:
-    static void set_NAME_LENGTH(int l) { NAME_LENGTH = l; }
-    static int get_NAME_LENGTH() { return NAME_LENGTH; }
+    static void set_DISPLAYED_LENGTH(int l) { DISPLAYED_LENGTH = l; }
+    static int get_DISPLAYED_LENGTH() { return DISPLAYED_LENGTH; }
     static void set_MAX_WIDTH(int w) { MAX_WIDTH = w; }
     static int get_MAX_WIDTH() { return MAX_WIDTH; }
     static void set_IS_MATRIX(bool f) { IS_MATRIX = f; }
@@ -17,7 +17,7 @@ public:
     static long long get_INF() { return INF; }
 };
 
-int Debug::NAME_LENGTH = 0;
+int Debug::DISPLAYED_LENGTH = 0;
 int Debug::MAX_WIDTH = 0;
 bool Debug::IS_MATRIX = false;
 long long Debug::INF = LLONG_MAX;
@@ -112,6 +112,16 @@ ostream& operator<<(ostream& os, const tuple<Ts...>* t) {
 
 // Debug for vector (1-dimensional)
 template <typename T>
+int ELEMENT_WIDTH(vector<T>& v) {
+    int width = 0;
+    for (auto e : v) {
+        width += ELEMENT_WIDTH(e) + ", "s.size();
+    }
+    width += "[]"s.size() - ", "s.size();
+    return width;
+}
+
+template <typename T>
 ostream& operator<<(ostream& os, vector<T>* v) {
     os << "["s;
     bool flg = true;
@@ -131,6 +141,18 @@ ostream& operator<<(ostream& os, vector<T>* v) {
 
 // Debug for vector (2-dimensional)
 template <typename T>
+int ELEMENT_WIDTH(vector<vector<T>>& v) {
+    int max_element_width = 0, max_length = 0;
+    for (auto ve : v) {
+        for (auto e : ve) {
+            max_element_width = max(max_element_width, ELEMENT_WIDTH(e));
+        }
+        max_length = max(max_length, (int)ve.size());
+    }
+    return (max_element_width + ", "s.size()) * max_length + "[]"s.size();
+}
+
+template <typename T>
 ostream& operator<<(ostream& os, vector<vector<T>>* v) {
     Debug::set_IS_MATRIX(true);
     int width = 0;
@@ -140,9 +162,9 @@ ostream& operator<<(ostream& os, vector<vector<T>>* v) {
         }
     }
     Debug::set_MAX_WIDTH(width);
-    string space = "";
-    for (int i = 0; i < Debug::get_NAME_LENGTH() + 7; ++i) space += " ";
     os << "["s;
+    string space = "";
+    for (int i = 0; i < Debug::get_DISPLAYED_LENGTH() + "["s.size(); ++i) space += " ";
     bool flg = true;
     for (auto e : *v) {
         os << (flg ? ""s : "\n" + space);
@@ -259,6 +281,7 @@ ostream& operator<<(ostream& os, deque<T>* que) {
 
 // Debug assistant
 #define DUMP(...) INTERNAL_DUMP(#__VA_ARGS__, __VA_ARGS__)
+#define DUMPS(...) INTERNAL_DUMPS(#__VA_ARGS__, 0, __VA_ARGS__)
 
 void REMOVE_SPACE(string& s) {
     while (s[0] == ' ') {
@@ -293,9 +316,41 @@ void INTERNAL_DUMP(string name) {}
 template <class Head, class... Tail>
 void INTERNAL_DUMP(string name, Head&& head, Tail&&... tail) {
     pair<string, string> p = GET_NAME(name);
-    Debug::set_NAME_LENGTH(p.first.size());
-    cerr << ">> "s << &(p.first) << " = "s << &head << endl;
+    cerr << ">> "s << &(p.first) << " = "s;
+    Debug::set_DISPLAYED_LENGTH(">> "s.size() + p.first.size() + " = "s.size());
+    cerr << &head << endl;
 	INTERNAL_DUMP(p.second, move(tail)...);
+}
+
+void INTERNAL_DUMPS(string name, int displayed_length) {
+    cerr << ")"s << endl;
+}
+template <class Head, class... Tail>
+void INTERNAL_DUMPS(string name, int displayed_length, Head&& head, Tail&&... tail) {
+    bool first_call = displayed_length == 0;
+    if (first_call) {
+        cerr << ">> "s << "("s;  displayed_length += ">> "s.size() + "("s.size();
+        pair<string, string> p;
+        while (!name.empty()) {
+            pair<string, string> p = GET_NAME(name);
+            cerr << &(p.first);  displayed_length += ELEMENT_WIDTH(p.first);
+            if (!p.second.empty()) {
+                cerr << ", "s;  displayed_length += ", "s.size();
+            }
+            name = p.second;
+        }
+        cerr << ")"s << " = "s;  displayed_length += ")"s.size() + " = "s.size();
+    }
+    if (first_call) {
+        cerr << "("s;  displayed_length += "("s.size();
+        Debug::set_DISPLAYED_LENGTH(displayed_length);
+        cerr << &head;  displayed_length += ELEMENT_WIDTH(head);
+    } else {
+        cerr << ", "s;  displayed_length += ", "s.size();
+        Debug::set_DISPLAYED_LENGTH(displayed_length);
+        cerr << &head;  displayed_length += ELEMENT_WIDTH(head);
+    }
+	INTERNAL_DUMPS("", displayed_length, move(tail)...);
 }
 
 // End of Debug parts
@@ -303,7 +358,8 @@ void INTERNAL_DUMP(string name, Head&& head, Tail&&... tail) {
 
 
 int main() {
-    // サンプル
+    // DUMP() サンプル
+    cout << "---DUMP---" << endl;
     int x = 114, y = -514;
     string s = "RAISE A SUILEN";
     DUMP(x, y, max(x, y), s);
@@ -317,13 +373,9 @@ int main() {
     dp[1][1] = -INF;
     DUMP(dp);
 
-    // 出力画面
-    // >> x = 114
-    // >> y = -514
-    // >> max(x, y) = 114
-    // >> s = RAISE A SUILEN
-    // >> v = [(Rinko, 1017, 1), (Moka, 93, 0)]
-    // >> dp = [[   0,    1,    2]
-    //          [  10, -INF,   12]
-    //          [  20,   21,   22]]
+    // DUMPS() サンプル
+    cout << "---DUMPS---" << endl;
+    DUMPS(x, v);
+    DUMPS(dp, s);
+    DUMPS(s, dp);
 }
