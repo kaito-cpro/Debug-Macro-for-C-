@@ -279,6 +279,37 @@ ostream& operator<<(ostream& os, deque<T>* que) {
     return os;
 }
 
+// Debug for sub-vevtor
+template <typename T>
+vector<T> subvec(vector<T> v, int l, int r) {
+    assert(0 <= l && l < v.size());
+    assert(0 < r && r <= v.size());
+    vector<T> res;
+    for (int i = l; i < r; ++i) {
+        res.push_back(v[i]);
+    }
+    return res;
+}
+template <typename T>
+vector<vector<T>> subvec(vector<vector<T>> v, int l0, int r0, int l1, int r1) {
+    assert(0 <= l0 && l0 < v.size());
+    assert(0 < r0 && r0 <= v.size());
+    assert(0 <= l1 && 0 < r1 && l0 < r0 && l1 < r1);
+    vector<vector<T>> res(r0 - l0);
+    int out_of_range = 0;
+    for (int i = l0; i < r0; ++i) {
+        for (int j = l1; j < r1; ++j) {
+            if (0 <= j && j < v[i].size()) res[i].push_back(v[i][j]);
+            else {
+                ++out_of_range;
+                break;
+            }
+        }
+    }
+    assert(out_of_range < res.size());
+    return res;
+}
+
 // Debug assistant
 #define DUMP(...) INTERNAL_DUMP(#__VA_ARGS__, __VA_ARGS__)
 #define DUMPS(...) INTERNAL_DUMPS(#__VA_ARGS__, 0, __VA_ARGS__)
@@ -358,46 +389,57 @@ void INTERNAL_DUMPS(string name, int displayed_length, Head&& head, Tail&&... ta
 
 
 int main() {
-    // DUMP() サンプル
-    cout << "---DUMP---" << endl;
-    int x = 114, y = -514;
-    string s = "RAISE A SUILEN";
-    DUMP(x, y, max(x, y), s);
-    using T = tuple<string, int, bool>;
-    vector<T> v{T("Rinko", 1017, true), T("Moka", 93, false)};
-    DUMP(v);
-    vector<vector<int>> dp(3, vector<int>(3));
-    for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) dp[i][j] = 10 * i + j;
-    const int INF = 1 << 30;
-    Debug::set_INF(INF);  // INF は桁が大きくて見にくいので "INF" と表示させたいとき
-    dp[1][1] = -INF;
-    DUMP(dp);
+    // DUMP() サンプル -------------------------------------------------------------------------------------------------
+    int x = -114, y = 514;                                                                                           //
+    string s = "RAISE A SUILEN";                                                                                     //
+    DUMP(x, max(x, y), s);                                                                                           //
+    // 出力画面                                                                                                       //
+    // ---DUMP---                                                                                                    //
+    // >> x = -114                                                                                                   //
+    // >> max(x, y) = 514                                                                                            //
+    // >> s = RAISE A SUILEN                                                                                         //
+                                                                                                                     //
+    using T = tuple<string, int, bool>;                                                                              //
+    vector<T> v{T("Rinko", 1017, true), T("Moka", 93, false)};                                                       //
+    DUMP(v);                                                                                                         //
+    // 出力画面                                                                                                       //
+    // >> v = [(Rinko, 1017, 1), (Moka, 93, 0)]                                                                      //
+                                                                                                                     //
+    vector<vector<int>> dp(3, vector<int>(3));                                                                       //
+    for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) dp[i][j] = 10 * i + j;                                   //
+    const int INF = 1 << 30;                                                                                         //
+    Debug::set_INF(INF);  // INF は桁が大きくて見にくいので "INF" と表示させたいとき                                     //
+    dp[1][1] = -INF;                                                                                                 //
+    DUMP(dp, subvec(dp, 0, 2), subvec(dp, 0, 3, 1, 3));                                                              //
+    // 出力画面                                                                                                       //
+    // >> dp = [[   0,    1,    2]                                                                                   //
+    //          [  10, -INF,   12]                                                                                   //
+    //          [  20,   21,   22]]                                                                                  //
+    // >> subvec(dp, 0, 2) = [[   0,    1,    2]                                                                     //
+    //                        [  10, -INF,   12]]                                                                    //
+    // >> subvec(dp, 0, 3, 1, 3) = [[   1,    2]                                                                     //
+    //                              [-INF,   12]                                                                     //
+    //                              [  21,   22]]                                                                    //
+    // ----------------------------------------------------------------------------------------------------------------
 
-    // DUMPS() サンプル
-    // DUMP(x, y) でも x と y を表示できるが複数行にまたがるので, 組 (x, y) として 1 行に表示できるようにしたのが DUMPS()
-    // つまり, DUMP(make_tuple(x, y)) のような表示形態となる
-    // また, 2 次元 vector の場合は見やすくインデントされる仕様になっている
-    cout << "---DUMPS---" << endl;
-    DUMPS(x, v);
-    DUMPS(dp, s);
-    DUMPS(s, dp);
-
-    // 出力画面
-    // ---DUMP---
-    // >> x = 114
-    // >> y = -514
-    // >> max(x, y) = 114
-    // >> s = RAISE A SUILEN
-    // >> v = [(Rinko, 1017, 1), (Moka, 93, 0)]
-    // >> dp = [[   0,    1,    2]
-    //          [  10, -INF,   12]
-    //          [  20,   21,   22]]
-    // ---DUMPS---
-    // >> (x, v) = (114, [(Rinko, 1017, 1), (Moka, 93, 0)])
-    // >> (dp, s) = ([[   0,    1,    2]
-    //                [  10, -INF,   12]
-    //                [  20,   21,   22]], RAISE A SUILEN)
-    // >> (s, dp) = (RAISE A SUILEN, [[   0,    1,    2]
-    //                                [  10, -INF,   12]
-    //                                [  20,   21,   22]])
+    // DUMPS() サンプル ------------------------------------------------------------------------------------------------
+    // DUMP(x, y) でも x と y を表示できるが複数行にまたがるので, 組 (x, y) として 1 行に表示できるようにしたのが DUMPS()   //
+    // つまり, DUMP(make_tuple(x, y)) のような表示形態となる                                                            //
+    // また, 2 次元 vector の場合は見やすくインデントされる仕様になっている                                               //
+    DUMPS(x, v);                                                                                                     //
+    // 出力画面                                                                                                       //
+    // >> (x, v) = (-114, [(Rinko, 1017, 1), (Moka, 93, 0)])                                                         //
+                                                                                                                     //
+    DUMPS(dp, s);                                                                                                    //
+    // 出力画面                                                                                                       //
+    // >> (dp, s) = ([[   0,    1,    2]                                                                             //
+    //                [  10, -INF,   12]                                                                             //
+    //                [  20,   21,   22]], RAISE A SUILEN)                                                           //
+                                                                                                                     //
+    DUMPS(s, dp);                                                                                                    //
+    // 出力画面                                                                                                       //
+    // >> (s, dp) = (RAISE A SUILEN, [[   0,    1,    2]                                                             //
+    //                                [  10, -INF,   12]                                                             //
+    //                                [  20,   21,   22]])                                                           //
+    // ----------------------------------------------------------------------------------------------------------------
 }
