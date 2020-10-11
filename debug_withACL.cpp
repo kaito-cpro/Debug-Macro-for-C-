@@ -15,8 +15,8 @@ public:
     static int get_MAX_WIDTH() { return MAX_WIDTH; }
     static void set_IS_MATRIX(bool f) { IS_MATRIX = f; }
     static bool get_IS_MATRIX() { return IS_MATRIX; }
-    static void set_INF(long long i) { INF = i; }
-    static long long get_INF() { return INF; }
+    static void set_inf(long long i) { INF = i; }
+    static long long get_inf() { return INF; }
 };
 
 int Debug::DISPLAYED_LENGTH = 0;
@@ -31,8 +31,8 @@ int ELEMENT_WIDTH(T e) {
     stringstream ss;
     ss << e;
     width = ss.str().size();
-    if (ss.str() == to_string(Debug::get_INF())) width = "INF"s.size();
-    if (ss.str() == to_string(-Debug::get_INF())) width = "-INF"s.size();
+    if (ss.str() == to_string(Debug::get_inf())) width = "INF"s.size();
+    if (ss.str() == to_string(-Debug::get_inf())) width = "-INF"s.size();
     return width;
 }
 
@@ -40,8 +40,8 @@ template <typename T>
 ostream& operator<<(ostream& os, T* e) {
     stringstream ss;
     ss << *e;
-    if (ss.str() == to_string(Debug::get_INF())) os << "INF"s;
-    else if (ss.str() == to_string(-Debug::get_INF())) os << "-INF"s;
+    if (ss.str() == to_string(Debug::get_inf())) os << "INF"s;
+    else if (ss.str() == to_string(-Debug::get_inf())) os << "-INF"s;
     else os << ss.str();
     return os;
 }
@@ -517,7 +517,7 @@ int main() {
     vector<vector<int>> dp(3, vector<int>(3));
     for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) dp[i][j] = 10 * i + j;
     const int INF = 1 << 30;
-    Debug::set_INF(INF);  // INF は桁が大きくて見にくいので "INF" と表示させたいとき
+    Debug::set_inf(INF);  // INF は桁が大きくて見にくいので "INF" と表示させたいとき
     dp[1][1] = -INF;
     DUMP(dp, subvec(dp, 0, 2), subvec(dp, 0, 3, 1, 3));  // subvec() で部分行列を取り出せる
     // 出力画面
