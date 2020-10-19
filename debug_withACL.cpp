@@ -456,37 +456,37 @@ void INTERNAL_DUMP(string name) {}
 template <class Head, class... Tail>
 void INTERNAL_DUMP(string name, Head&& head, Tail&&... tail) {
     pair<string, string> p = GET_NAME(name);
-    cerr << ">> "s << &(p.first) << " = "s;
+    cerr << ">> " << &(p.first) << " = ";
     Debug::set_DISPLAYED_LENGTH(">> "s.size() + p.first.size() + " = "s.size());
     cerr << &head << endl;
 	INTERNAL_DUMP(p.second, move(tail)...);
 }
 
 void INTERNAL_DUMPS(string name, int displayed_length) {
-    cerr << ")"s << endl;
+    cerr << ")" << endl;
 }
 template <class Head, class... Tail>
 void INTERNAL_DUMPS(string name, int displayed_length, Head&& head, Tail&&... tail) {
     bool first_call = displayed_length == 0;
     if (first_call) {
-        cerr << ">> "s << "("s;  displayed_length += ">> "s.size() + "("s.size();
+        cerr << ">> " << "(";  displayed_length += ">> "s.size() + "("s.size();
         pair<string, string> p;
         while (!name.empty()) {
             pair<string, string> p = GET_NAME(name);
             cerr << &(p.first);  displayed_length += ELEMENT_WIDTH(p.first);
             if (!p.second.empty()) {
-                cerr << ", "s;  displayed_length += ", "s.size();
+                cerr << ", ";  displayed_length += ", "s.size();
             }
             name = p.second;
         }
-        cerr << ")"s << " = "s;  displayed_length += ")"s.size() + " = "s.size();
+        cerr << ")" << " = ";  displayed_length += ")"s.size() + " = "s.size();
     }
     if (first_call) {
-        cerr << "("s;  displayed_length += "("s.size();
+        cerr << "(";  displayed_length += "("s.size();
         Debug::set_DISPLAYED_LENGTH(displayed_length);
         cerr << &head;  displayed_length += ELEMENT_WIDTH(head);
     } else {
-        cerr << ", "s;  displayed_length += ", "s.size();
+        cerr << ", ";  displayed_length += ", "s.size();
         Debug::set_DISPLAYED_LENGTH(displayed_length);
         cerr << &head;  displayed_length += ELEMENT_WIDTH(head);
     }
