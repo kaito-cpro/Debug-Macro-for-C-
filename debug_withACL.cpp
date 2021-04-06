@@ -22,7 +22,7 @@ public:
 int Debug::DISPLAYED_LENGTH = 0;
 int Debug::MAX_WIDTH = 0;
 bool Debug::IS_MATRIX = false;
-long long Debug::INF = LLONG_MAX;
+long long Debug::INF = numeric_limits<long long>::max() / 2;
 
 // Debug for basic type element
 template <typename T>
