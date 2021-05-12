@@ -304,6 +304,27 @@ ostream& operator<<(ostream& os, map<T, U>* mp) {
     return os;
 }
 
+// Debug for stack
+template <typename T>
+ostream& operator<<(ostream& os, stack<T>* st) {
+    stack<T> st_cp = *st;
+    vector<T> stock;
+    while (!st_cp.empty()) {
+        stock.push_back(st_cp.top());
+        st_cp.pop();
+    }
+    reverse(stock.begin(), stock.end());
+    os << "["s;
+    bool flg = true;
+    for (auto e : stock) {
+        os << (flg ? ""s : ", "s);
+        os << &e;
+        flg = false;
+    }
+    os << "]"s;
+    return os;
+}
+
 // Debug for queue
 template <typename T>
 ostream& operator<<(ostream& os, queue<T>* que) {
