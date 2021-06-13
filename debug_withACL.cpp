@@ -441,8 +441,8 @@ vector<vector<T>> transpose(vector<vector<T>> v) {
 }
 
 // Debug assistant
-#define DUMP(...) INTERNAL_DUMP(#__VA_ARGS__, __VA_ARGS__)
-#define DUMPS(...) INTERNAL_DUMPS(#__VA_ARGS__, 0, __VA_ARGS__)
+#define debug(...) INTERNAL_DUMP(#__VA_ARGS__, __VA_ARGS__)
+#define debugs(...) INTERNAL_DUMPS(#__VA_ARGS__, 0, __VA_ARGS__)
 
 void REMOVE_SPACE(string& s) {
     while (s[0] == ' ') {
@@ -522,16 +522,16 @@ int main() {
     // DUMP() サンプル -------------------------------------------------------------------------------------------------
     int x = -114, y = 514;
     string s = "RAISE A SUILEN";
-    DUMP(x, max(x, y), s);  // max(x, y) 等も, きちんと演算結果が表示される
+    debug(x, max(x, y), s);  // max(x, y) 等も, きちんと演算結果が表示される
     // 出力画面
-    // ---DUMP---
+    // ---debug---
     // >> x = -114
     // >> max(x, y) = 514
     // >> s = RAISE A SUILEN
 
     using T = tuple<string, int, bool>;
     vector<T> v{T("Rinko", 1017, true), T("Moca", 93, false)};
-    DUMP(v);  // 内部実装が階層的になっているので, 基本的にどんな複雑なデータ構造も表示可能(C言語由来の配列は先頭要素のみ出力されてしまう)
+    debug(v);  // 内部実装が階層的になっているので, 基本的にどんな複雑なデータ構造も表示可能(C言語由来の配列は先頭要素のみ出力されてしまう)
     // 出力画面
     // >> v = [(Rinko, 1017, 1), (Moca, 93, 0)]
 
@@ -540,7 +540,7 @@ int main() {
     const int INF = 1 << 30;
     Debug::set_inf(INF);  // INF は桁が大きくて見にくいので "INF" と表示させたいとき
     dp[1][1] = -INF;
-    DUMP(dp, subvec(dp, 0, 2), subvec(dp, 0, 3, 1, 3));  // subvec() で部分行列を取り出せる
+    debug(dp, subvec(dp, 0, 2), subvec(dp, 0, 3, 1, 3));  // subvec() で部分行列を取り出せる
     // 出力画面
     // >> dp = [[   0,    1,    2]
     //          [  10, -INF,   12]
@@ -552,20 +552,20 @@ int main() {
     //                              [  21,   22]]
 
     // DUMPS() サンプル ------------------------------------------------------------------------------------------------
-    // DUMP(x, y) でも x と y を表示できるが複数行にまたがるので, 組 (x, y) として 1 行に表示できるようにしたのが DUMPS()
-    // つまり, DUMP(make_tuple(x, y)) のような表示形態となる
+    // debug(x, y) でも x と y を表示できるが複数行にまたがるので, 組 (x, y) として 1 行に表示できるようにしたのが DUMPS()
+    // つまり, debug(make_tuple(x, y)) のような表示形態となる
     // また, 2 次元 vector の場合は見やすくインデントされる仕様になっている
-    DUMPS(x, s);
+    debugs(x, s);
     // 出力画面
     // >> (x, s) = (-114, RAISE A SUILEN)
 
-    DUMPS(dp, s);
+    debugs(dp, s);
     // 出力画面
     // >> (dp, s) = ([[   0,    1,    2]
     //                [  10, -INF,   12]
     //                [  20,   21,   22]], RAISE A SUILEN)
 
-    DUMPS(s, dp);
+    debugs(s, dp);
     // 出力画面
     // >> (s, dp) = (RAISE A SUILEN, [[   0,    1,    2]
     //                                [  10, -INF,   12]
@@ -574,7 +574,7 @@ int main() {
     // AC-Library サンプル ---------------------------------------------------------------------------------------------
     using mint = modint1000000007;
     mint a = 1000000008;
-    DUMPS(a, a.val());  // .val() を付けると int で解釈されて, 付けない場合は内部で m.val() に自動で変換される
+    debugs(a, a.val());  // .val() を付けると int で解釈されて, 付けない場合は内部で m.val() に自動で変換される
     // 出力画面
     // >> (a, a.val()) = (1, 1)
 
@@ -583,8 +583,8 @@ int main() {
     g.add_edge(0, 3, 4);
     g.flow(0, 4);
     auto edges = g.edges();
-    DUMP(transpose(edges));  // edges は vector<edge> の 1 次元 vector なので, transpose() で転置して見やすくしてみた
-    DUMP(transpose(subvec(dp, 0, 2)));  // subvec() で部分行列を取り出して, それを transpose() で転置したりも可能
+    debug(transpose(edges));  // edges は vector<edge> の 1 次元 vector なので, transpose() で転置して見やすくしてみた
+    debug(transpose(subvec(dp, 0, 2)));  // subvec() で部分行列を取り出して, それを transpose() で転置したりも可能
     // 出力画面
     // >> transpose(edges) = [[(3, 4, 4)]
     //                        [(0, 3, 4)]]
