@@ -35,6 +35,9 @@ int ELEMENT_WIDTH(T e) {
     if (ss.str() == to_string(-Debug::get_inf())) width = "-INF"s.size();
     return width;
 }
+int ELEMENT_WIDTH(bool e) {
+    return "true"s.size();
+}
 
 template <typename T>
 ostream& operator<<(ostream& os, T* e) {
@@ -52,6 +55,10 @@ ostream& operator<<(ostream& os, char* e) {
 ostream& operator<<(ostream& os, const char* e) {
     string s = e;
     os << s;
+    return os;
+}
+ostream& operator<<(ostream& os, bool* e) {
+    os << (*e ? "true"s : "false"s);
     return os;
 }
 
@@ -533,7 +540,7 @@ int main() {
     vector<T> v{T("Rinko", 1017, true), T("Moca", 93, false)};
     debug(v);  // 内部実装が階層的になっているので, 基本的にどんな複雑なデータ構造も表示可能(C言語由来の配列は先頭要素のみ出力されてしまう)
     // 出力画面
-    // >> v = [(Rinko, 1017, 1), (Moca, 93, 0)]
+    // >> v = [(Rinko, 1017, true), (Moca, 93, false)]
 
     vector<vector<int>> dp(3, vector<int>(3));
     for (int i = 0; i < 3; ++i) for (int j = 0; j < 3; ++j) dp[i][j] = 10 * i + j;
