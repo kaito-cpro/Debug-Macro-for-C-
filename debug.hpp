@@ -36,7 +36,7 @@ int ELEMENT_WIDTH(T e) {
     return width;
 }
 int ELEMENT_WIDTH(bool e) {
-    return "true"s.size();
+    return (e ? "true"s.size() : "false"s.size());
 }
 
 template <typename T>
