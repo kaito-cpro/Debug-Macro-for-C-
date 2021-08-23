@@ -311,6 +311,20 @@ ostream& operator<<(ostream& os, map<T, U>* mp) {
     return os;
 }
 
+// Debug for unordered_map
+template <typename T, typename U>
+ostream& operator<<(ostream& os, unordered_map<T, U>* mp) {
+    os << "{"s;
+    bool flg = true;
+    for (auto e : *mp) {
+        os << (flg ? ""s : ", "s);
+        os << &(e.first) << ": "s << &(e.second);
+        flg = false;
+    }
+    os << "}"s;
+    return os;
+}
+
 // Debug for stack
 template <typename T>
 ostream& operator<<(ostream& os, stack<T>* st) {
